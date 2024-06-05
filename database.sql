@@ -16,172 +16,172 @@ CREATE TYPE article_status AS ENUM ('created', 'in moderation', 'published', 'ar
 
 
 CREATE TABLE Programs (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    id SERIAL [pk],
+    name VARCHAR(255),
     price DECIMAL(10,2),
-    program_type VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    program_type VARCHAR(50),
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Modules (
-    id SERIAL PRIMARY KEY,
+    id SERIAL [pk],
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
     deleted_at TIMESTAMP
 );
 
 
 
 CREATE TABLE Courses (
-    id SERIAL PRIMARY KEY,
+    id SERIAL [pk],
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Lessons (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
+    id SERIAL [pk],
+    course_id INT [ref: > Courses.id],
+    title VARCHAR(255),
     content TEXT,
     video_url VARCHAR(255),
     position INT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
     is_deleted BOOLEAN DEFAULT FALSE,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    course_id BIGINT REFERENCES Courses(id)
+    deleted_at TIMESTAMP 
 );
 
 CREATE TABLE ProgramModules (
-    program_id INT REFERENCES Programs(id),
-    module_id INT REFERENCES Modules(id),
-    PRIMARY KEY (program_id, module_id),
-    FOREIGN KEY (program_id) REFERENCES Programs(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
+    program_id INT [ref: > Programs.id],
+    module_id INT [ref: > Modules.id],
+    (program_id, module_id) [pk]
 );
 
 CREATE TABLE CourseModules (
-    course_id INT REFERENCES Courses(id),
-    module_id INT REFERENCES Modules(id),
-    PRIMARY KEY (course_id, module_id),
-    FOREIGN KEY (course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
+    course_id INT [ref: > Courses.id],
+    module_id INT [ref: > Modules.id],
+    (course_id, module_id) [pk]
 );
 
 
 CREATE TABLE Users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    id SERIAL [pk],
+    name VARCHAR(255),
     email VARCHAR(255) UNIQUE,
     password_hash VARCHAR(255),
-    teaching_group_url VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    role user_role,
+    teaching_group_id INT [ref: > TeachingGroups.id],
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
     deleted_at TIMESTAMP,
-    role user_role NOT NULL
 );
 
 
 CREATE TABLE TeachingGroups (
-    id SERIAL PRIMARY KEY,
-    slug VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    id SERIAL [pk],
+    slug VARCHAR(255),
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Enrollments (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(id),
-    program_id INT REFERENCES Programs(id),
-    status subscription_status NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    id SERIAL [pk],
+    user_id INT [ref: > Users.id],
+    program_id INT [ref: > Programs.id],
+    status subscription_status,
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Payments (
-    id SERIAL PRIMARY KEY,
-    enrollment_id INT REFERENCES Enrollments(id),
+    id SERIAL [pk],
+    enrollment_id INT [ref: < Enrollment.id],
     payment_amount INT,
-    status payment_state NOT NULL,
+    status payment_state,
     date_of_payment TIMESTAMP,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE ProgramCompetions (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(id),
-    program_id INT REFERENCES Programs(id),
+    id SERIAL [pk],
+    user_id INT [ref: > Users.id],
+    program_id INT [ref: > Programs.id],
     status program_completion_status NOT NULL,
     start_program_completion TIMESTAMP,
     finish_program_completion TIMESTAMP,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Certificates (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(id),
-    program_id INT REFERENCES Programs(id),
+    id SERIAL [pk],
+    user_id INT [ref: > Users.id],
+    program_id INT [ref: > Programs.id],
     certificate_url VARCHAR(255),
     date_of_issue  TIMESTAMP,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP WITH [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Quizzes (
-    id SERIAL PRIMARY KEY,
-    lesson_id INT REFERENCES Lessons(id) NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    id SERIAL [pk],
+    lesson_id INT [ref: > Lessons.id],
+    name VARCHAR(255),
     content TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Questions (
-    id SERIAL PRIMARY KEY,
-    quiz_id INT REFERENCES Quizzes(id) NOT NULL,
+    id SERIAL [pk],
+    quiz_id INT [ref: > Quizzes.id],
     content TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Answers (
-    id SERIAL PRIMARY KEY,
-    question_id INT REFERENCES Questions(id) NOT NULL,
+    id SERIAL [pk],
+    question_id INT [ref: > Questions.id],
     content TEXT,
     is_correct BOOLEAN
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Exercises (
-    id SERIAL PRIMARY KEY,
-    lesson_id INT REFERENCES Lessons(id),
+    id SERIAL [pk],
+    lesson_id INT [ref: > Lessons.id],
     name VARCHAR(255),
     exercise_url VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Discussions (
-    id SERIAL PRIMARY KEY,
-    lesson_id INT REFERENCES Lessons(id) NOT NULL,
-    parent_id INT REFERENCES Discussions(id),
+    id SERIAL [pk],
+    lesson_id INT [ref: > Lessons.id],
+    parent_id INT [ref: > Discussions],
     content TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
 CREATE TABLE Blog (
-    id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES Users(id),
+    id SERIAL [pk],
+    student_id INT [ref: > Students.id],
     title VARCHAR(255) UNIQUE,
     content TEXT,
-    status article_status NOT NULL, 
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    status article_status,
+    created_at TIMESTAMP [default: 'CURRENT_TIMESTAMP'],
+    updated_at TIMESTAMP [default: 'CURRENT_TIMESTAMP']
 );
 
