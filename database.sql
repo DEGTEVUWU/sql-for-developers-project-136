@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS Modules, Programs, Courses, Lessons, ProgramModules, CourseModules, Users, TeachingGroups, Enrollments, Payments, ProgramCompetions, Certificates, Quizzes, Questions, Answers, Exercises, Discussions, Blog CASCADE;
+
+DROP TYPE IF EXISTS article_status CASCADE;
+DROP TYPE IF EXISTS program_completion_status CASCADE;
+DROP TYPE IF EXISTS payment_state CASCADE;
+DROP TYPE IF EXISTS subscription_status CASCADE;
+DROP TYPE IF EXISTS user_role CASCADE;
+
+
 CREATE TYPE user_role AS ENUM ('student', 'teacher', 'admin');
 CREATE TYPE subscription_status AS ENUM ('active', 'pending', 'cancelled', 'completed');
 CREATE TYPE payment_state AS ENUM ('pending', 'paid', 'failed', 'refunded');
@@ -55,7 +64,7 @@ CREATE TABLE ProgramModules (
     FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE CoursesModules (
+CREATE TABLE CourseModules (
     course_id BIGINT REFERENCES Courses(id),
     module_id BIGINT REFERENCES Modules(id),
     PRIMARY KEY (course_id, module_id),
@@ -141,7 +150,7 @@ CREATE TABLE Questions (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Answer (
+CREATE TABLE Answers (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     question_id BIGINT REFERENCES Questions(id) NOT NULL,
     content TEXT,
