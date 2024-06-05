@@ -50,7 +50,7 @@ CREATE TABLE Lessons (
 CREATE TABLE ProgramModules (
     program_id BIGINT REFERENCES Programs(id),
     module_id BIGINT REFERENCES Modules(id),
-    PRIMARY KEY (program_id, module_id)
+    PRIMARY KEY (program_id, module_id),
     FOREIGN KEY (program_id) REFERENCES Programs(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
