@@ -25,6 +25,8 @@ CREATE TABLE Modules (
     deleted_at TIMESTAMP
 );
 
+
+
 CREATE TABLE Courses (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
