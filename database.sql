@@ -18,7 +18,7 @@ CREATE TYPE article_status AS ENUM ('created', 'in moderation', 'published', 'ar
 CREATE TABLE Programs (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    price BIGINT,
+    price DECIMAL(10,2),
     program_type VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -57,16 +57,16 @@ CREATE TABLE Lessons (
 );
 
 CREATE TABLE ProgramModules (
-    program_id BIGINT REFERENCES Programs(id),
-    module_id BIGINT REFERENCES Modules(id),
+    program_id INT REFERENCES Programs(id),
+    module_id INT REFERENCES Modules(id),
     PRIMARY KEY (program_id, module_id),
     FOREIGN KEY (program_id) REFERENCES Programs(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE CourseModules (
-    course_id BIGINT REFERENCES Courses(id),
-    module_id BIGINT REFERENCES Modules(id),
+    course_id INT REFERENCES Courses(id),
+    module_id INT REFERENCES Modules(id),
     PRIMARY KEY (course_id, module_id),
     FOREIGN KEY (course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -95,8 +95,8 @@ CREATE TABLE TeachingGroups (
 
 CREATE TABLE Enrollments (
     id SERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES Users(id),
-    program_id BIGINT REFERENCES Programs(id),
+    user_id INT REFERENCES Users(id),
+    program_id INT REFERENCES Programs(id),
     status subscription_status NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -104,8 +104,8 @@ CREATE TABLE Enrollments (
 
 CREATE TABLE Payments (
     id SERIAL PRIMARY KEY,
-    enrollment_id BIGINT REFERENCES Enrollments(id),
-    payment_amount BIGINT,
+    enrollment_id INT REFERENCES Enrollments(id),
+    payment_amount INT,
     status payment_state NOT NULL,
     date_of_payment TIMESTAMP,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -114,8 +114,8 @@ CREATE TABLE Payments (
 
 CREATE TABLE ProgramCompetions (
     id SERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES Users(id),
-    program_id BIGINT REFERENCES Programs(id),
+    user_id INT REFERENCES Users(id),
+    program_id INT REFERENCES Programs(id),
     status program_completion_status NOT NULL,
     start_program_completion TIMESTAMP,
     finish_program_completion TIMESTAMP,
@@ -125,8 +125,8 @@ CREATE TABLE ProgramCompetions (
 
 CREATE TABLE Certificates (
     id SERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES Users(id),
-    program_id BIGINT REFERENCES Programs(id),
+    user_id INT REFERENCES Users(id),
+    program_id INT REFERENCES Programs(id),
     certificate_url VARCHAR(255),
     date_of_issue  TIMESTAMP,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -135,7 +135,7 @@ CREATE TABLE Certificates (
 
 CREATE TABLE Quizzes (
     id SERIAL PRIMARY KEY,
-    lesson_id BIGINT REFERENCES Lessons(id) NOT NULL,
+    lesson_id INT REFERENCES Lessons(id) NOT NULL,
     name VARCHAR(255) NOT NULL,
     content TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -143,23 +143,23 @@ CREATE TABLE Quizzes (
 );
 
 CREATE TABLE Questions (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    quiz_id BIGINT REFERENCES Quizzes(id) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    quiz_id INT REFERENCES Quizzes(id) NOT NULL,
     content TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Answers (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    question_id BIGINT REFERENCES Questions(id) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    question_id INT REFERENCES Questions(id) NOT NULL,
     content TEXT,
     is_correct BOOLEAN
 );
 
 CREATE TABLE Exercises (
     id SERIAL PRIMARY KEY,
-    lesson_id BIGINT REFERENCES Lessons(id),
+    lesson_id INT REFERENCES Lessons(id),
     name VARCHAR(255),
     exercise_url VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -168,8 +168,8 @@ CREATE TABLE Exercises (
 
 CREATE TABLE Discussions (
     id SERIAL PRIMARY KEY,
-    lesson_id BIGINT REFERENCES Lessons(id) NOT NULL,
-    parent_id BIGINT REFERENCES Discussions(id),
+    lesson_id INT REFERENCES Lessons(id) NOT NULL,
+    parent_id INT REFERENCES Discussions(id),
     content TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -177,10 +177,11 @@ CREATE TABLE Discussions (
 
 CREATE TABLE Blog (
     id SERIAL PRIMARY KEY,
-    student_id BIGINT REFERENCES Users(id),
+    student_id INT REFERENCES Users(id),
     title VARCHAR(255) UNIQUE,
     content TEXT,
     status article_status NOT NULL, 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
