@@ -77,7 +77,7 @@ CREATE TABLE Users (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,
-    teaching_group_id BIGINT REFERENCES TeachingGroup(id),
+    teaching_group_id BIGINT REFERENCES TeachingGroups(id),
     role user_role NOT NULL
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE Enrollments (
 
 CREATE TABLE Payments (
     id SERIAL PRIMARY KEY,
-    enrollment_id BIGINT REFERENCES Enrollments(id)
+    enrollment_id BIGINT REFERENCES Enrollments(id),
     payment_amount BIGINT,
     status payment_state NOT NULL,
     date_of_payment TIMESTAMP,
@@ -111,14 +111,14 @@ CREATE TABLE ProgramCompetions (
     start_program_completion TIMESTAMP,
     finish_program_completion TIMESTAMP,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP 
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
- 
+
 CREATE TABLE Certificates (
     id SERIAL PRIMARY KEY,
     user_id BIGINT REFERENCES Users(id),
     program_id BIGINT REFERENCES Programs(id),
-    certificate_url VARCHAR(255),   
+    certificate_url VARCHAR(255),
     date_of_issue  TIMESTAMP,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -139,7 +139,7 @@ CREATE TABLE Questions (
     parent_id BIGINT REFERENCES Questions(id),
     content TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE AnswerOptions (
@@ -170,7 +170,7 @@ CREATE TABLE Discussions (
 
 CREATE TABLE Blog (
     id SERIAL PRIMARY KEY,
-    student_id BIGINT REFERENCES Students(id),
+    student_id BIGINT REFERENCES Users(id),
     title VARCHAR(255) UNIQUE,
     content TEXT,
     status article_status NOT NULL, 
