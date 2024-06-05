@@ -41,7 +41,7 @@ CREATE TABLE Lessons (
     title VARCHAR(255) NOT NULL,
     content TEXT,
     video_url VARCHAR(255),
-    position INT NOT NULL,
+    position INT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOLEAN DEFAULT FALSE,
