@@ -62,27 +62,25 @@ CREATE TABLE CoursesModules (
 );
 
 
+CREATE TABLE Users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE,
+    password_hash VARCHAR(255),
+    teaching_group_url VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP,
+    role user_role NOT NULL
+);
+
+
 CREATE TABLE TeachingGroups (
     id SERIAL PRIMARY KEY,
     slug VARCHAR(255) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TABLE Users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE,
-    password_hash VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP,
-    teaching_group_id BIGINT REFERENCES TeachingGroups(id),
-    role user_role NOT NULL
-);
-
-
-
 
 CREATE TABLE Enrollments (
     id SERIAL PRIMARY KEY,
@@ -136,18 +134,16 @@ CREATE TABLE Quizzes (
 CREATE TABLE Questions (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     quiz_id BIGINT REFERENCES Quizzes(id) NOT NULL,
-    parent_id BIGINT REFERENCES Questions(id),
     content TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE AnswerOptions (
+CREATE TABLE Answer (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     question_id BIGINT REFERENCES Questions(id) NOT NULL,
     content TEXT,
-    is_correct BOOLEAN,
-    FOREIGN KEY (question_id) REFERENCES Questions(id)
+    is_correct BOOLEAN
 );
 
 CREATE TABLE Exercises (
