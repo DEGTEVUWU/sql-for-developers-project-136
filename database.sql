@@ -1,7 +1,8 @@
-CREATE TYPE subscription_status AS ENUM ('active', 'pending', 'cancel>
-CREATE TYPE payment_state AS ENUM ('pending', 'paid', 'failed', 'refu>
-CREATE TYPE program_completion_status AS ENUM ('active', 'completed',>
-CREATE TYPE article_status AS ENUM ('created', 'in moderation', 'publ>
+CREATE TYPE user_role AS ENUM ('student', 'teacher', 'admin');
+CREATE TYPE subscription_status AS ENUM ('active', 'pending', 'cancelled', 'completed');
+CREATE TYPE payment_state AS ENUM ('pending', 'paid', 'failed', 'refunded');
+CREATE TYPE program_completion_status AS ENUM ('active', 'completed', 'pending', 'cancelled');
+CREATE TYPE article_status AS ENUM ('created', 'in moderation', 'published', 'archived');
 
 
 
@@ -56,7 +57,6 @@ CREATE TABLE CoursesModules (
     modules_id BIGINT REFERENCES Modules(id)
 );
 
-CREATE TYPE user_role AS ENUM ('student', 'teacher', 'admin');
 
 CREATE TABLE TeachingGroups (
     id SERIAL PRIMARY KEY,
