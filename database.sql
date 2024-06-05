@@ -31,8 +31,7 @@ CREATE TABLE Courses (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    module_id BIGINT REFERENCES Modules(id)
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Lessons (
@@ -59,7 +58,9 @@ CREATE TABLE ProgramModules (
 CREATE TABLE CoursesModules (
     course_id BIGINT REFERENCES Courses(id),
     module_id BIGINT REFERENCES Modules(id),
-    PRIMARY KEY (course_id, module_id)
+    PRIMARY KEY (course_id, module_id),
+    FOREIGN KEY (course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
