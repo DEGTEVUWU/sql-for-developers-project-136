@@ -8,6 +8,7 @@ CREATE TYPE article_status AS ENUM ('created', 'in moderation', 'published', 'ar
 
 CREATE TABLE Programs (
     id SERIAL PRIMARY KEY,
+    modul_id BIGINT REFERENCES Modules(id),
     name VARCHAR(255) NOT NULL,
     price BIGINT,
     program_type VARCHAR(255),
@@ -22,6 +23,7 @@ CREATE TABLE Modules (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     program_id BIGINT REFERENCES Programs(id),
+    course_id BIGINT REFERENCES Cources(id),
     deleted_at TIMESTAMP
 );
 
@@ -31,7 +33,7 @@ CREATE TABLE Courses (
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    modules_id BIGINT REFERENCES Modules(id)
+    module_id BIGINT REFERENCES Modules(id)
 );
 
 CREATE TABLE Lessons (
