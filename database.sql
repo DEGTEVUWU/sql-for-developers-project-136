@@ -51,12 +51,14 @@ CREATE TABLE Lessons (
 
 CREATE TABLE ProgramModules (
     program_id BIGINT REFERENCES Programs(id),
-    modules_id BIGINT REFERENCES Modules(id)
+    module_id BIGINT REFERENCES Modules(id),
+    PRIMARY KEY (program_id, module_id)
 );
 
 CREATE TABLE CoursesModules (
-    courses_id BIGINT REFERENCES Courses(id),
-    modules_id BIGINT REFERENCES Modules(id)
+    course_id BIGINT REFERENCES Courses(id),
+    module_id BIGINT REFERENCES Modules(id),
+    PRIMARY KEY (course_id, module_id)
 );
 
 
