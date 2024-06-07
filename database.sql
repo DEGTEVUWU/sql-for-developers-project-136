@@ -30,7 +30,8 @@ CREATE TABLE Modules (
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP
+    deleted_at TIMESTAMP,
+    program_id INT REFERENCES Programs(id)
 );
 
 
@@ -55,15 +56,7 @@ CREATE TABLE Lessons (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at TIMESTAMP WITH TIME ZONE,
-    course_id BIGINT REFERENCES Courses(id)
-);
-
-CREATE TABLE ProgramModules (
-    program_id INT REFERENCES Programs(id),
-    module_id INT REFERENCES Modules(id),
-    PRIMARY KEY (program_id, module_id),
-    FOREIGN KEY (program_id) REFERENCES Programs(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (module_id) REFERENCES Modules(id) ON DELETE CASCADE ON UPDATE CASCADE
+    course_id INT REFERENCES Courses(id)
 );
 
 CREATE TABLE CourseModules (
